@@ -1,0 +1,61 @@
+# .github/workflows/hello.yml
+
+name: Meu Primeiro CI com GitHub Actions
+
+# Define quando o workflow será executado
+on:
+  # Roda o workflow em cada push para qualquer branch
+  push:
+    branches:
+      - main # ou master, ou a branch principal do seu projeto
+
+  # Roda o workflow quando um pull request é aberto ou atualizado para a branch principal
+  pull_request:
+    branches:
+      - main # ou master
+
+  # Permite que você execute o workflow manualmente da aba "Actions" do GitHub
+  workflow_dispatch:
+
+# Define os jobs (tarefas) que serão executados
+jobs:
+  build_and_run:
+    # O ambiente onde este job será executado. 'ubuntu-latest' é uma VM Linux hospedada pelo GitHub.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Passo 1: Faz o checkout do seu código do repositório
+      # Isso torna o código da sua aplicação disponível para os passos seguintes.
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Passo 2: Configura o ambiente Python
+      # Se sua aplicação for em outra linguagem (Node.js, Java, Go), você usaria a ação correspondente.
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' # Use a versão do Python que seu projeto precisa (ex: '3.9', '3.10')
+
+      # Passo 3: Instala as dependências (se houver)
+      # Se você tivesse um requirements.txt, faria: pip install -r requirements.txt
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          # Se você tivesse dependências, faria:
+          # pip install -r requirements.txt
+
+      # Passo 4: Executa a aplicação
+      # Este passo executa o script hello.py
+      - name: Rodar a aplicação
+        run: python hello.py
+
+      # Passo 5: Exemplo de teste (simples)
+      # Em uma aplicação real, você teria testes de unidade, integração, etc.
+      - name: Executar um "teste" simples
+        run: |
+          echo "Verificando se a aplicação rodou sem erros..."
+          # Aqui você colocaria comandos de teste reais, como:
+          # pytest # para testes Python
+          # npm test # para testes Node.js
+          # mvn test # para testes Java
+          echo "Teste simples concluído com sucesso!"
