@@ -7,12 +7,12 @@ on:
   # Roda o workflow em cada push para qualquer branch
   push:
     branches:
-      - main # ou master, ou a branch principal do seu projeto
+      - master # ou master, ou a branch principal do seu projeto
 
   # Roda o workflow quando um pull request é aberto ou atualizado para a branch principal
   pull_request:
     branches:
-      - main # ou master
+      - master # ou master
 
   # Permite que você execute o workflow manualmente da aba "Actions" do GitHub
   workflow_dispatch:
