@@ -27,14 +27,14 @@ jobs:
       # Passo 1: Faz o checkout do seu código do repositório
       # Isso torna o código da sua aplicação disponível para os passos seguintes.
       - name: Checkout do código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Passo 2: Configura o ambiente Python
       # Se sua aplicação for em outra linguagem (Node.js, Java, Go), você usaria a ação correspondente.
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10' # Use a versão do Python que seu projeto precisa (ex: '3.9', '3.10')
+          python-version: '3.9' # Use a versão do Python que seu projeto precisa (ex: '3.9', '3.10')
 
       # Passo 3: Instala as dependências (se houver)
       # Se você tivesse um requirements.txt, faria: pip install -r requirements.txt
