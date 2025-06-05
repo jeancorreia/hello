@@ -27,14 +27,40 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # Passo 2: Configura o ambiente Python
+      # Passo 2: Validacao de SAST
+      - name: SAST
+        id: grep_search # Dá um ID para este passo, útil para referenciar
+        run: |
+          # Define a palavra ou padrão que você está procurando
+          PALAVRA_CHAVE="Branco"
+          # Define o arquivo onde a busca será feita
+          ARQUIVO_ALVO="hello.py" # Altere para o arquivo que você quer verificar
+
+          # Usa grep para procurar a palavra-chave.
+          # -q: modo silencioso (não imprime o resultado, apenas o código de saída)
+          # || true: isso garante que o comando grep em si não falhe o step imediatamente
+          #         se a palavra não for encontrada. A lógica de falha será manual.
+          if grep -q "${PALAVRA_CHAVE}" "${ARQUIVO_ALVO}"; then
+            echo "::notice file=${ARQUIVO_ALVO}::A palavra '${PALAVRA_CHAVE}' foi encontrada. O check passou."
+            # Você pode definir uma saída para o passo se precisar
+            echo "result=found" >> $GITHUB_OUTPUT
+          else
+            echo "::error file=${ARQUIVO_ALVO}::ERRO: A palavra '${PALAVRA_CHAVE}' NÃO foi encontrada em '${ARQUIVO_ALVO}'. Quebrando o pipeline."
+            # Usa 'exit 1' para forçar a falha do job/workflow
+            exit 1
+          fi
+          # Se você preferir que o grep falhe o step automaticamente, remova o '|| true' e o 'if/else',
+          # mas a mensagem de erro do GitHub Actions pode não ser tão clara.
+          # run: grep -q "${PALAVRA_CHAVE}" "${ARQUIVO_ALVO}"
+
+      # Passo 3: Configura o ambiente Python
       # Se sua aplicação for em outra linguagem (Node.js, Java, Go), você usaria a ação correspondente.
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x' # Use a versão do Python que seu projeto precisa (ex: '3.9', '3.10')
 
-      # Passo 3: Instala as dependências (se houver)
+      # Passo 4: Instala as dependências (se houver)
       # Se você tivesse um requirements.txt, faria: pip install -r requirements.txt
       - name: Instalar dependências
         run: |
@@ -42,12 +68,12 @@ jobs:
           # Se você tivesse dependências, faria:
           # pip install -r requirements.txt
 
-      # Passo 4: Executa a aplicação
+      # Passo 5: Executa a aplicação
       # Este passo executa o script hello.py
       - name: Rodar a aplicação
         run: python hello.py
 
-      # Passo 5: Exemplo de teste (simples)
+      # Passo 6: Exemplo de teste (simples)
       # Em uma aplicação real, você teria testes de unidade, integração, etc.
       - name: Executar um "teste" simples
         run: |
