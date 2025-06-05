@@ -1,7 +1,8 @@
 # hello.py
-# Authorization: Basic amVhbjphYmNAMTIz
+
 def main():
     print("Meu primeiro codigo Python + GitHub Action!")
-    print("\033[44mVersao Azul\033[0m")
+    print("Authorization: Basic amVhbjphYmNAMTIz")
+    print("\033[42mVersao Verde\033[0m")
 if __name__ == "__main__":
     main()
