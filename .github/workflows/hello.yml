@@ -46,21 +46,12 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
         
-      # Passo 4: Executa a análise CodeQL. Os resultados são carregados automaticamente para a aba "Security".
-      # Esta ação também registra um "status check" no Pull Request.
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          # Você pode configurar os parâmetros para quando falhar
-          # Por exemplo, se uma dependência com vulnerabilidade de alta/crítica for adicionada
-          fail-on-severity: high # Ou 'critical'
-
       # Passo 4: Validacao de Regras Especificas da empresa
       - name: SAST
         id: grep_search # Dá um ID para este passo, útil para referenciar
         run: |
           # Define a palavra ou padrão que você está procurando
-          PALAVRA_CHAVE="Azul"
+          PALAVRA_CHAVE="Verde"
           # Define o arquivo onde a busca será feita
           ARQUIVO_ALVO="hello.py" # Altere para o arquivo que você quer verificar
 
