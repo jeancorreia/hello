@@ -39,13 +39,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: |
-            # javascript
-            python
-            # java
-            # csharp
-            # go
-            # ruby
+          languages: python
             
       # Passo 3: Este passo tenta construir seu projeto para que o CodeQL possa analisá-lo.
       # Para projetos complexos, pode ser necessário substituir isso por seus próprios comandos de build.
@@ -59,7 +53,7 @@ jobs:
         with:
           # Você pode configurar os parâmetros para quando falhar
           # Por exemplo, se uma dependência com vulnerabilidade de alta/crítica for adicionada
-          fail-on-severity: 'critical' # Ou 'high'
+          fail-on-severity: 'high' # Ou 'critical'
 
       # Passo 4: Validacao de Regras Especificas da empresa
       - name: SAST
