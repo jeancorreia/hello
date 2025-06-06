@@ -2,8 +2,10 @@ name: Meu Primeiro CI com GitHub Actions
 
 # Permissao do Pipeline
 permissions:
-  contents: read
+  contents: read # Para ler o código do repositório
   pull-requests: write
+  security-events: write # Para carregar os resultados da varredura de código
+  actions: read # Necessário para alguns runners hospedados no GitHub, verificar status de actions
 
 # Define quando o workflow será executado
 on:
@@ -31,8 +33,35 @@ jobs:
       # Isso torna o código da sua aplicação disponível para os passos seguintes.
       - name: Checkout do código
         uses: actions/checkout@v4
+     
+      # Passo 2: Inicializa o CodeQL para as linguagens do seu projeto
+      # IMPORTANTE: Ajuste 'javascript' e 'python' para as linguagens que você usa
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: |
+            # javascript
+            python
+            # java
+            # csharp
+            # go
+            # ruby
+            
+      # Passo 3: Este passo tenta construir seu projeto para que o CodeQL possa analisá-lo.
+      # Para projetos complexos, pode ser necessário substituir isso por seus próprios comandos de build.
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+        
+      # Passo 4: Executa a análise CodeQL. Os resultados são carregados automaticamente para a aba "Security".
+      # Esta ação também registra um "status check" no Pull Request.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          # Você pode configurar os parâmetros para quando falhar
+          # Por exemplo, se uma dependência com vulnerabilidade de alta/crítica for adicionada
+          fail-on-severity: 'critical' # Ou 'high'
 
-      # Passo 2: Validacao de SAST
+      # Passo 4: Validacao de Regras Especificas da empresa
       - name: SAST
         id: grep_search # Dá um ID para este passo, útil para referenciar
         run: |
