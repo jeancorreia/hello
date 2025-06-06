@@ -53,7 +53,7 @@ jobs:
         with:
           # Você pode configurar os parâmetros para quando falhar
           # Por exemplo, se uma dependência com vulnerabilidade de alta/crítica for adicionada
-          fail-on-severity: 'high' # Ou 'critical'
+          fail-on-severity: high # Ou 'critical'
 
       # Passo 4: Validacao de Regras Especificas da empresa
       - name: SAST
