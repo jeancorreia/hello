@@ -37,7 +37,7 @@ jobs:
         id: grep_search # Dá um ID para este passo, útil para referenciar
         run: |
           # Define a palavra ou padrão que você está procurando
-          PALAVRA_CHAVE="Azul"
+          PALAVRA_CHAVE="Verde"
           # Define o arquivo onde a busca será feita
           ARQUIVO_ALVO="hello.py" # Altere para o arquivo que você quer verificar
 
