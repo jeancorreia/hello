@@ -5,19 +5,19 @@ permissions:
   contents: read
   pull-requests: write
 
-# Define quando o workflow será executado
+# Define o criterio de start do Pipeline
 on:
-  # Roda o workflow em cada push para qualquer branch
+  # Roda em cada push para qualquer branch
   push:
     branches:
       - master 
 
-  # Roda o workflow quando um pull request é aberto ou atualizado para a branch principal
+  # Roda quando um pull request é aberto ou atualizado para a branch principal
   pull_request:
     branches:
       - master
 
-  # Permite que você execute o workflow manualmente da aba "Actions" do GitHub
+  # Permite que você execute manualmente da aba "Actions" do GitHub
   workflow_dispatch:
 
 # Define os jobs (tarefas) que serão executados
@@ -72,20 +72,51 @@ jobs:
           python -m pip install --upgrade pip
           # Se você tivesse dependências, faria:
           # pip install -r requirements.txt
-          pip install requests 
-
+  
       # Passo 5: Executa a aplicação
       # Este passo executa o script hello.py
       - name: Rodar a aplicação
         run: python hello.py
+        
+#==================================================================================
+# Grupo de Tarefas de Testes em Geral: Segurança, Funcional, Unitario, etc.
+#==================================================================================
 
       # Passo 6: Exemplo de teste (simples)
       # Em uma aplicação real, você teria testes de unidade, integração, etc.
-      - name: Executar um "teste" simples
+      - name: Exemplo um "teste" simples
         run: |
           echo "Verificando se a aplicação rodou sem erros..."
-          # Aqui você colocaria comandos de teste reais, como:
-          # pytest # para testes Python
-          # npm test # para testes Node.js
-          # mvn test # para testes Java
+          # => Aqui você colocaria comandos de teste reais, como:
           echo "Teste simples concluído com sucesso!"
+          
+      # Passo 7: SAST Bandit
+      - name: Install Bandit
+        run: |
+          pip install bandit # Instala a ferramenta Bandit
+          
+      - name: Executar Bandit Scan and Gerar relatorio SARIF
+        # Comando para rodar o Bandit
+        # -r .: Recursivamente escaneia o diretório atual
+        # -f sarif: Gera o relatório no formato SARIF (essencial para GitHub Code Scanning)
+        # -o bandit-results.sarif: Salva o relatório no arquivo especificado
+        # --sev high: Opcional, fará o bandit retornar um código de erro se encontrar vulnerabilidades 'high' ou superiores.
+        #             Isso pode ser usado para quebrar o pipeline diretamente ANTES do upload SARIF.
+        #             Para integração com GHAS, o upload SARIF e as regras de proteção de branch são a forma preferencial de quebra.
+        run: bandit -r . -f sarif -o bandit-results.sarif --exclude .venv,.git,migrations,tests # Exclua pastas que não precisam ser escaneadas
+        # continue-on-error: true # Opcional: Descomente isso se você quiser que o passo continue mesmo se o bandit encontrar erros,
+                                  # mas ainda carregar os resultados para o GitHub Security tab.
+                                  # Útil para feedback inicial, mas não para bloqueio rigoroso.
+
+      - name: Upload relatorio SARIF para o GitHub Code Scanning
+        # Esta ação do GitHub faz o upload do arquivo SARIF gerado pelo Bandit
+        # para a aba "Security" do seu repositório no GitHub.
+        # O GitHub então processará este relatório e criará/atualizará os alertas de segurança.
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: bandit-results.sarif # O arquivo SARIF gerado pelo Bandit
+          # category: bandit-scan # Opcional: Adicione uma categoria para o scan se você usar múltiplos scanners
+
+      - name: SAST Scan Concluido
+        run: echo "Bandit scan completed. Check GitHub Security tab for details and alerts." 
+          
