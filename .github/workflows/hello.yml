@@ -4,7 +4,7 @@ name: Meu Primeiro CI com GitHub Actions
 permissions:
   contents: read
   pull-requests: write
-  security-events: write # **ESSENCIAL:** Permissão para fazer upload dos resultados de segurança de outras ferramentas (formato SARIF)
+  security-events: write # **ESSENCIAL:** Permissão para fazer upload dos resultados de segurança de outras ferramentas (format
 
 # Define o criterio de start do Pipeline
 on:
@@ -105,7 +105,7 @@ jobs:
         #             Isso pode ser usado para quebrar o pipeline diretamente ANTES do upload SARIF.
         #             Para integração com GHAS, o upload SARIF e as regras de proteção de branch são a forma preferencial de quebra.
         run: |
-           semgrep scan --sarif --sarif-output=semgrep.sarif
+           semgrep scan --config "p/python" --sarif --sarif-output=semgrep.sarif .
            ls -lha                             
 
       - name: Upload relatorio SARIF para o GitHub Code Scanning
