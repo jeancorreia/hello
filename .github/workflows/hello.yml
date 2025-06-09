@@ -104,7 +104,7 @@ jobs:
         #             Isso pode ser usado para quebrar o pipeline diretamente ANTES do upload SARIF.
         #             Para integração com GHAS, o upload SARIF e as regras de proteção de branch são a forma preferencial de quebra.
         run: bandit -r . --format sarif -o bandit-results.sarif --exclude .venv,.git,migrations,tests # Exclua pastas que não precisam ser escaneadas
-        # continue-on-error: true # Opcional: Descomente isso se você quiser que o passo continue mesmo se o bandit encontrar erros,
+         continue-on-error: true # Opcional: Descomente isso se você quiser que o passo continue mesmo se o bandit encontrar erros,
                                   # mas ainda carregar os resultados para o GitHub Security tab.
                                   # Útil para feedback inicial, mas não para bloqueio rigoroso.
 
