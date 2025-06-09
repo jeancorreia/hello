@@ -93,8 +93,8 @@ jobs:
       # Passo 7: SAST Bandit
       - name: Install Bandit
         run: |
-          pip install bandit # Instala a ferramenta Bandit
-          
+          pip install bandit bandit_sarif_formatter # Instala a ferramenta Bandit
+               
       - name: Executar Bandit Scan and Gerar relatorio SARIF
         # Comando para rodar o Bandit
         # -r .: Recursivamente escaneia o diretório atual
@@ -103,7 +103,7 @@ jobs:
         # --sev high: Opcional, fará o bandit retornar um código de erro se encontrar vulnerabilidades 'high' ou superiores.
         #             Isso pode ser usado para quebrar o pipeline diretamente ANTES do upload SARIF.
         #             Para integração com GHAS, o upload SARIF e as regras de proteção de branch são a forma preferencial de quebra.
-        run: bandit -r . -f sarif -o bandit-results.sarif --exclude .venv,.git,migrations,tests # Exclua pastas que não precisam ser escaneadas
+        run: bandit -r . --format sarif -o bandit-results.sarif --exclude .venv,.git,migrations,tests # Exclua pastas que não precisam ser escaneadas
         # continue-on-error: true # Opcional: Descomente isso se você quiser que o passo continue mesmo se o bandit encontrar erros,
                                   # mas ainda carregar os resultados para o GitHub Security tab.
                                   # Útil para feedback inicial, mas não para bloqueio rigoroso.
