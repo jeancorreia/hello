@@ -95,7 +95,7 @@ jobs:
         run: |
           pip install semgrep # Instala a ferramenta Bandit
                
-      - name: Executar Bandit Scan and Gerar relatorio SARIF
+      - name: Executar Semgrep Scan and Gerar relatorio SARIF
         # Comando para rodar o Bandit
         # -r .: Recursivamente escaneia o diretório atual
         # -f sarif: Gera o relatório no formato SARIF (essencial para GitHub Code Scanning)
@@ -103,8 +103,9 @@ jobs:
         # --sev high: Opcional, fará o bandit retornar um código de erro se encontrar vulnerabilidades 'high' ou superiores.
         #             Isso pode ser usado para quebrar o pipeline diretamente ANTES do upload SARIF.
         #             Para integração com GHAS, o upload SARIF e as regras de proteção de branch são a forma preferencial de quebra.
-        run: semgrep scan --sarif --sarif-output=semgrep.sarif
-                                
+        run: |
+           semgrep scan --sarif --sarif-output=semgrep.sarif
+           ls -lha                             
 
       - name: Upload relatorio SARIF para o GitHub Code Scanning
         # Esta ação do GitHub faz o upload do arquivo SARIF gerado
@@ -113,7 +114,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: semgrep.sarif # O arquivo SARIF gerado 
-          # category: bandit-scan # Opcional: Adicione uma categoria para o scan se você usar múltiplos scanners
 
       - name: SAST Scan Concluido
         run: echo "Semgrep scan completed. Check GitHub Security tab for details and alerts."
