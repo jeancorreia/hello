@@ -1,7 +1,19 @@
 # hello.py
 
 import base64
+import os
 
+# Vulnerabilidade 1. Command Injection (Injeção de Comando)
+# Vulnerabilidade: Ocorre quando a entrada do usuário é usada diretamente 
+# em comandos executados no shell do sistema operacional, permitindo que um
+#  atacante execute comandos arbitrários no servidor.
+def ping_host_vulnerable(host):
+    # !!! VULNERÁVEL: Concatenação direta da entrada do usuário em um comando shell
+    command = f"ping -c 1 {host}"
+    print(f"Executando comando: {command}")
+    os.system(command) # ou subprocess.run(command, shell=True)
+
+# Vulnerabilidade 2. Password HardCode
 username = "jean"
 password = "abc@123"
 
