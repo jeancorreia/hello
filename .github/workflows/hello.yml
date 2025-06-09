@@ -2,7 +2,7 @@ name: Meu Primeiro CI com GitHub Actions
 
 # Permissao do Pipeline
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 # Define o criterio de start do Pipeline
@@ -93,7 +93,7 @@ jobs:
       # Passo 7: SAST Semgrep
       - name: Install SAST Semgrep
         run: |
-          pip install semgrep # Instala a ferramenta Bandit
+          pip install semgrep # Instala a ferramenta Semgrep
                
       - name: Executar Semgrep Scan and Gerar relatorio SARIF
         # Comando para rodar o Bandit
