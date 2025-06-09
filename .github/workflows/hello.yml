@@ -90,10 +90,10 @@ jobs:
           # => Aqui você colocaria comandos de teste reais, como:
           echo "Teste simples concluído com sucesso!"
           
-      # Passo 7: SAST Bandit
-      - name: Install Bandit
+      # Passo 7: SAST Semgrep
+      - name: Install SAST Semgrep
         run: |
-          pip install bandit bandit_sarif_formatter # Instala a ferramenta Bandit
+          pip install semgrep # Instala a ferramenta Bandit
                
       - name: Executar Bandit Scan and Gerar relatorio SARIF
         # Comando para rodar o Bandit
@@ -103,20 +103,18 @@ jobs:
         # --sev high: Opcional, fará o bandit retornar um código de erro se encontrar vulnerabilidades 'high' ou superiores.
         #             Isso pode ser usado para quebrar o pipeline diretamente ANTES do upload SARIF.
         #             Para integração com GHAS, o upload SARIF e as regras de proteção de branch são a forma preferencial de quebra.
-        run: bandit -r /home/runner/work/hello/hello --format sarif -o bandit-results.sarif --exclude .venv,.git,migrations,tests # Exclua pastas que não precisam ser escaneadas
-                                  # continue-on-error: true # Opcional: Descomente isso se você quiser que o passo continue mesmo se o bandit encontrar erros,
-                                  # mas ainda carregar os resultados para o GitHub Security tab.
-                                  # Útil para feedback inicial, mas não para bloqueio rigoroso.
+        run: semgrep scan --sarif --sarif-output=semgrep.sarif
+                                
 
       - name: Upload relatorio SARIF para o GitHub Code Scanning
-        # Esta ação do GitHub faz o upload do arquivo SARIF gerado pelo Bandit
+        # Esta ação do GitHub faz o upload do arquivo SARIF gerado
         # para a aba "Security" do seu repositório no GitHub.
         # O GitHub então processará este relatório e criará/atualizará os alertas de segurança.
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: bandit-results.sarif # O arquivo SARIF gerado pelo Bandit
+          sarif_file: semgrep.sarif # O arquivo SARIF gerado 
           # category: bandit-scan # Opcional: Adicione uma categoria para o scan se você usar múltiplos scanners
 
       - name: SAST Scan Concluido
-        run: echo "Bandit scan completed. Check GitHub Security tab for details and alerts." 
+        run: echo "Semgrep scan completed. Check GitHub Security tab for details and alerts."
           
