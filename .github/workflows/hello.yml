@@ -2,8 +2,9 @@ name: Meu Primeiro CI com GitHub Actions
 
 # Permissao do Pipeline
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
+   security-events: write # **ESSENCIAL:** Permissão para fazer upload dos resultados de segurança de outras ferramentas (formato SARIF)
 
 # Define o criterio de start do Pipeline
 on:
